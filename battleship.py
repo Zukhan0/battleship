@@ -111,7 +111,7 @@ def valid_input_direction(entry):
 
 def ship_setup_p1(entry, ship):
     anchor_coords = convert_coords(entry)
-    ship_direction = valid_input_direction(input("Where is the bow of the ship facing? (up, down, left, right)? ").upper())
+    ship_direction = valid_input_direction(input("Where is the bow of the ship facing (up, down, left, right)? ").upper())
     while valid_input_direction(ship_direction) == 'INVALID':
         print('Invalid input.')
         time.sleep(.5)
@@ -284,7 +284,10 @@ def check_hit(grid, ships, coords):
 
     
     else:
-        grid[-1 + coords[0]][-1 + coords[1]] = '+'
+        if (grid[-1 + coords[0]][-1 + coords[1]] == 'x'):
+            pass
+
+        else: grid[-1 + coords[0]][-1 + coords[1]] = '+'
 
         if p1_turn == True:
             print("You didn't hit anything.")
@@ -316,11 +319,11 @@ for ship in reversed(ships_p2):
 show_grid(grid_p1)
 for ship in reversed(ships_p1):
     while ship.setup == False:
-        entry = input(f"\nWhere is your {ship.name}'s anchor({ship.size}u)? ").upper()
+        entry = input(f"\nWhere is your {ship.name}'s anchor ({ship.size}u)? ").upper()
         while valid_input_coords(entry) == False:
             print('Invalid input.')
             time.sleep(.5)
-            entry = input(f"Where is your {ship.name}'s anchor({ship.size}u)? ").upper()
+            entry = input(f"Where is your {ship.name}'s anchor ({ship.size}u)? ").upper()
         ship.setup = ship_setup_p1(entry, ship)
     print(f'\nYour {ship.name} has been placed.')
 
