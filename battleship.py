@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+from termcolor import colored
 import numpy as np
 import time
 import random
@@ -54,8 +55,33 @@ p1_turn = True
 setup = False
 
 def show_grid(grid):  
+
+    #The first part of this func replaces (. o + x) with (, O * X) characters on p1_grid where p1 guessed.
+    #The array is then converted to str and made visible with diff colors on those guesses (, O * X)
+        
+    for guess in guesses_p1:
+        marked_guess = convert_coords(guess)
+        list(map(int, marked_guess))
+        marked_guess = [x -1 for x in marked_guess]
+
+        if grid_p1[marked_guess[0]][marked_guess[1]] == '.':
+            grid_p1[marked_guess[0]][marked_guess[1]] = ','
+        
+        if grid_p1[marked_guess[0]][marked_guess[1]] == 'o':
+            grid_p1[marked_guess[0]][marked_guess[1]] = 'O'
+
+        if grid_p1[marked_guess[0]][marked_guess[1]] == '+':
+            grid_p1[marked_guess[0]][marked_guess[1]] = '*'
+
+        if grid_p1[marked_guess[0]][marked_guess[1]] == 'x':
+            grid_p1[marked_guess[0]][marked_guess[1]] = 'X'
+    
+
     grid_string = np.array2string(grid)
-    grid_display = grid_string.replace('[','').replace(']','').replace('\n ','\n').replace("'.'", '.').replace("'o'", 'o').replace("'+'", '+').replace("'x'", 'x').splitlines()
+    grid_display = grid_string.replace('[','').replace(']','').replace('\n ','\n')\
+        .replace("'.'", '.').replace("'o'", 'o').replace("'+'", '+').replace("'x'", 'x')\
+        .replace("','", '\033[0;31m.\033[00m').replace("'O'", '\033[0;31mo\033[00m')\
+        .replace("'*'", '\033[0;31m+\033[00m').replace("'X'", '\033[0;31mx\033[00m').splitlines()
 
     print('\n')
     print(*column_headers)
@@ -295,6 +321,11 @@ def check_hit(grid, ships, coords):
         else:
             print("The enemy didn't hit anything.")
 
+    
+    #To show on your own board where you have guessed
+    '''if p1_turn == True:
+        colored(grid_p1[-1 + coords[0]][-1 + coords[1]], 'yellow')      '''
+
 def win_condition():
     global game_over
 
@@ -326,7 +357,6 @@ for ship in reversed(ships_p1):
             entry = input(f"Where is your {ship.name}'s anchor ({ship.size}u)? ").upper()
         ship.setup = ship_setup_p1(entry, ship)
     print(f'\nYour {ship.name} has been placed.')
-
 
 #main game loop
 setup = True
