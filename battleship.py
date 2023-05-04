@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 
-from termcolor import colored
 import numpy as np
 import time
 import random
